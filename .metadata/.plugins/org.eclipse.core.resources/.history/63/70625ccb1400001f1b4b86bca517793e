@@ -1,0 +1,20 @@
+package com.apitesting.test;
+
+import org.testng.annotations.Test;
+
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+
+public class GetApiRequest {
+	@Test
+	public void getAllBookings() {
+		RestAssured
+				.given()
+					.contentType(ContentType.JSON)
+					.basePath("https://restful-booker.herokuapp.com/booking")
+				.when()
+					.get();
+					
+	}
+
+}

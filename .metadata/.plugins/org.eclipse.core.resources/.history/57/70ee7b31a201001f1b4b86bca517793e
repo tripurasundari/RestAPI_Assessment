@@ -1,0 +1,71 @@
+package com.apitesting.test;
+
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import static org.testng.Assert.assertEquals;
+
+import java.io.File;
+import java.io.IOException;
+
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
+
+public class PutUpdateUserRequest {
+    
+    @BeforeMethod
+    public void setup() {
+        RestAssured.baseURI = "https://gorest.co.in";
+    }
+    
+    @Test
+    public void updateUserTest() {
+    	
+    	Response response  = RestAssured.given().log().all()
+    	            .contentType(ContentType.JSON)
+    	            .body(new File("./src/test/resources/updateUser.json"))
+    	            .header("Authorization", "Bearer e4b8e1f593dc4a731a153c5ec8cc9b8bbb583ae964ce650a741113091b4e2ac6")
+    	        .when().log().all()
+    	            .post("/public/v2/users/")
+    	        .then()
+    	            .statusCode(201);
+    	 try {
+             // Parse JSON string to JsonNode
+             ObjectMapper objectMapper = new ObjectMapper();
+             JsonNode jsonNode = objectMapper.readTree(new File("./src/test/resources/updateUser.json"));
+
+    	 
+             // Modify the value of the "name" field
+             ((ObjectNode) jsonNode).put("name", "Jane");
+
+             // Convert JsonNode back to JSON string
+             String modifiedJsonString = objectMapper.writeValueAsString(jsonNode);
+
+             // Print modified JSON string
+             System.out.println("Modified JSON: " + modifiedJsonString);
+         } catch (IOException e) {
+             e.printStackTrace();
+         }
+     
+    	
+        // Assuming userId is known
+        // Provide the actual userId here
+        
+        // Update user details - PUT
+        RestAssured.given()
+            .contentType(ContentType.JSON)
+            .body(new File("./src/test/resources/updateUser.json")) // Provide the path to the update user JSON file
+            .header("Authorization", "Bearer e4b8e1f593dc4a731a153c5ec8cc9b8bbb583ae964ce650a741113091b4e2ac6")
+            .when().log().all()
+            .put("/public/v2/users/" + userId)
+            .then().statusCode(200);
+        
+        
+        // You can add additional assertions here to verify the update operation if needed
+    }
+}

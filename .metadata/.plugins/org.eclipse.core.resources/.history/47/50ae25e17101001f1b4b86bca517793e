@@ -1,0 +1,44 @@
+package com.apitesting.test;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+// import io.restassured.path.json.JsonPath;
+import com.jayway.jsonpath.JsonPath;
+import io.restassured.response.Response;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
+public class GetApiRequest {
+	@Test
+	public void getUser() {
+		Response response = RestAssured.get("https://reqres.in/api/users?page=2");
+		System.out.println(response.getStatusCode());
+		System.out.println(response.getStatusLine());
+		System.out.println("==============================");
+		System.out.println(response.getBody().asString());
+		System.out.println("==============================");
+		System.out.println(response.getHeaders());
+		
+		//verified status code
+		Assert.assertEquals(response.getStatusCode(), 200);
+		
+		//verified status line
+		Assert.assertEquals(response.getStatusLine(), "HTTP/1.1 200 OK");
+
+		//asserted 7 from json response body
+		JSONArray obj=JsonPath.read(response.getBody().asString(),"$.total_pages");
+		System.out.println("==============================");
+		System.out.println("Json obje"+obj);
+		Assert.assertEquals(obj.get(0), 2);
+
+		//asserted email id from json response body
+
+		JSONArray obj2=JsonPath.read(response.getBody().asString(),"$.data..email");
+		Assert.assertTrue("michael.lawson@reqres.in".equalsIgnoreCase(obj2.get(0).toString()));
+
+					
+	}
+
+}

@@ -1,0 +1,28 @@
+package com.apitesting.test;
+
+import static org.testng.Assert.ARRAY_MISMATCH_TEMPLATE;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+// import io.restassured.path.json.JsonPath;
+import com.jayway.jsonpath.JsonPath;
+import io.restassured.response.Response;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
+public class GetApiRequest {
+	@Test
+	public void getUser() {
+		RestAssured response = RestAssured
+				.given()	
+				.when()
+					.get("https://reqres.in/api/users?page=2")
+				.then()
+				.assertThat();
+				
+					
+	}
+
+}
